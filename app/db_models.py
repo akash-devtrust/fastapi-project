@@ -1,4 +1,6 @@
-from sqlalchemy import Boolean, Column, Date, Integer, String, Text
+from datetime import datetime, timezone
+
+from sqlalchemy import Boolean, Column, Date, DateTime, Integer, String, Text
 
 from app.database import Base
 
@@ -12,3 +14,8 @@ class TodoDB(Base):
     completed = Column(Boolean, default=False, nullable=False)
     priority = Column(String(20), default="medium", nullable=False)
     due_date = Column(Date, nullable=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )

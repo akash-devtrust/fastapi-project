@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.database import Base, engine, get_db
 from app.db_models import TodoDB
-from app.models import Todo, TodoCreate, TodoUpdate
+from app.models import Todo, TodoCreate, TodoPatch, TodoUpdate
 
 app = FastAPI(title="Simple Todo API")
 
@@ -47,8 +47,7 @@ def get_todos(
     if search is not None:
         search_text = f"%{search}%"
         query = query.filter(
-            (TodoDB.title.ilike(search_text))
-            | (TodoDB.description.ilike(search_text))
+            (TodoDB.title.ilike(search_text)) | (TodoDB.description.ilike(search_text))
         )
     if priority is not None:
         query = query.filter(TodoDB.priority == priority)
@@ -70,6 +69,19 @@ def get_todo(todo_id: int, db: Session = Depends(get_db)) -> TodoDB:
 def create_todo(todo_data: TodoCreate, db: Session = Depends(get_db)) -> TodoDB:
     todo = TodoDB(**todo_data.model_dump())
     db.add(todo)
+    db.commit()
+    db.refresh(todo)
+    return todo
+
+
+@app.patch("/todos/{todo_id}", response_model=Todo)
+def patch_todo(
+    todo_id: int, todo_data: TodoPatch, db: Session = Depends(get_db)
+) -> TodoDB:
+    todo = find_todo(todo_id, db)
+    update_data = todo_data.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(todo, key, value)
     db.commit()
     db.refresh(todo)
     return todo
