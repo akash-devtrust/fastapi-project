@@ -1,6 +1,6 @@
 # Simple FastAPI Todo API
 
-A small, beginner-friendly REST API built with Python and FastAPI. It stores todos in an in-memory Python list, so data is reset each time the server restarts.
+A small, beginner-friendly REST API built with Python, FastAPI, and MySQL. It stores todos in a MySQL database, so data stays saved after the server restarts.
 
 ## Project Structure
 
@@ -8,6 +8,8 @@ A small, beginner-friendly REST API built with Python and FastAPI. It stores tod
 fastapi-project/
 ├── app/
 │   ├── __init__.py
+│   ├── database.py
+│   ├── db_models.py
 │   ├── main.py
 │   └── models.py
 ├── .gitignore
@@ -37,6 +39,34 @@ python -m venv .venv
 ```bash
 pip install -r requirements.txt
 ```
+
+## Set Up MySQL
+
+Create a MySQL database for the project:
+
+```sql
+CREATE DATABASE fastapi_todos;
+```
+
+Create a local `.env` file from the example file:
+
+```bash
+cp .env.example .env
+```
+
+Then update `.env` with your MySQL username and password:
+
+```env
+DATABASE_URL=mysql+pymysql://username:password@localhost:3306/fastapi_todos
+```
+
+Example for a local MySQL root user:
+
+```env
+DATABASE_URL=mysql+pymysql://root:your_password@localhost:3306/fastapi_todos
+```
+
+The app will create the `todos` table automatically when it starts.
 
 ## Run the API
 
