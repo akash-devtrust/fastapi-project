@@ -40,6 +40,8 @@ def get_todos(
     completed: bool | None = None,
     priority: Literal["low", "medium", "high"] | None = None,
     due_date: date | None = None,
+    limit: int = 10,
+    offset: int = 0,
     db: Session = Depends(get_db),
 ) -> list[TodoDB]:
     query = db.query(TodoDB)
@@ -57,7 +59,7 @@ def get_todos(
 
     if due_date is not None:
         query = query.filter(TodoDB.due_date == due_date)
-    return query.all()
+    return query.offset(offset).limit(limit).all()
 
 
 @app.get("/todos/{todo_id}", response_model=Todo)
