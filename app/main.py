@@ -1,3 +1,5 @@
+from typing import Literal
+
 from fastapi import Depends, FastAPI, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
@@ -35,6 +37,7 @@ def health_check() -> dict[str, str]:
 def get_todos(
     search: str | None = None,
     completed: bool | None = None,
+    priority: Literal["low", "medium", "high"] | None = None,
     db: Session = Depends(get_db),
 ) -> list[TodoDB]:
     query = db.query(TodoDB)
@@ -45,6 +48,8 @@ def get_todos(
             (TodoDB.title.ilike(search_text))
             | (TodoDB.description.ilike(search_text))
         )
+    if priority is not None:
+        query = query.filter(TodoDB.priority == priority)
 
     if completed is not None:
         query = query.filter(TodoDB.completed == completed)
@@ -76,6 +81,7 @@ def update_todo(
     todo.title = todo_data.title
     todo.description = todo_data.description
     todo.completed = todo_data.completed
+    todo.priority = todo_data.priority
 
     db.commit()
     db.refresh(todo)

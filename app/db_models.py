@@ -10,3 +10,4 @@ class TodoDB(Base):
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     completed = Column(Boolean, default=False, nullable=False)
+    priority = Column(String(20), default="medium", nullable=False)

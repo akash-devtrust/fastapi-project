@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel
 
 
@@ -5,6 +7,7 @@ class TodoBase(BaseModel):
     title: str
     description: str | None = None
     completed: bool = False
+    priority: Literal["low", "medium", "high"] = "medium"
 
 
 class TodoCreate(TodoBase):
