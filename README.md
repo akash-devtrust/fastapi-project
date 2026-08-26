@@ -141,3 +141,18 @@ git branch -M main
 git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
 git push -u origin main
 ```
+
+## Server Deployment
+
+On the server, pull the latest code:
+
+```bash
+cd ~/fastapi-project
+git pull origin main
+```
+
+Then reload the ASGI website:
+
+```bash
+pa website reload --domain kinady.pythonanywhere.com
+```

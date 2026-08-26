@@ -34,8 +34,25 @@ def health_check() -> dict[str, str]:
 
 
 @app.get("/todos", response_model=list[Todo])
-def get_todos() -> list[Todo]:
-    return todos
+def get_todos(search: str | None = None, completed : bool | None = None) -> list[Todo]:
+    results = todos
+    if search is not None:
+        search_text = search.lower()
+        results = [
+            todo
+            for todo in results
+            if search_text in todo.title.lower()
+            or (
+                todo.description is not None and search_text in todo.description.lower()
+            )
+        ]
+    if completed is not None:
+        results = [
+            todo
+            for todo in results
+            if todo.completed == completed
+        ]
+    return results
 
 
 @app.get("/todos/{todo_id}", response_model=Todo)
