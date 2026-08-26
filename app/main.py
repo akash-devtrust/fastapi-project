@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Response, status
@@ -38,6 +39,7 @@ def get_todos(
     search: str | None = None,
     completed: bool | None = None,
     priority: Literal["low", "medium", "high"] | None = None,
+    due_date: date | None = None,
     db: Session = Depends(get_db),
 ) -> list[TodoDB]:
     query = db.query(TodoDB)
@@ -54,6 +56,8 @@ def get_todos(
     if completed is not None:
         query = query.filter(TodoDB.completed == completed)
 
+    if due_date is not None:
+        query = query.filter(TodoDB.due_date == due_date)
     return query.all()
 
 
