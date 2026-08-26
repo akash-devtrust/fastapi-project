@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, Text
+from sqlalchemy import Boolean, Column, Date, Integer, String, Text
 
 from app.database import Base
 
@@ -11,3 +11,4 @@ class TodoDB(Base):
     description = Column(Text, nullable=True)
     completed = Column(Boolean, default=False, nullable=False)
     priority = Column(String(20), default="medium", nullable=False)
+    due_date = Column(Date, nullable=True)

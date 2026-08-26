@@ -82,6 +82,7 @@ def update_todo(
     todo.description = todo_data.description
     todo.completed = todo_data.completed
     todo.priority = todo_data.priority
+    todo.due_date = todo_data.due_date
 
     db.commit()
     db.refresh(todo)
