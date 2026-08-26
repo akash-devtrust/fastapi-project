@@ -1,6 +1,6 @@
 # Simple FastAPI Todo API
 
-A small, beginner-friendly REST API built with Python, FastAPI, and MySQL. It stores todos in a MySQL database, so data stays saved after the server restarts.
+A small, beginner-friendly REST API built with Python, FastAPI, and SQLite. It stores todos in a SQLite database file, so data stays saved after the server restarts.
 
 ## Project Structure
 
@@ -40,33 +40,29 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-## Set Up MySQL
+## Set Up SQLite
 
-Create a MySQL database for the project:
+SQLite does not need a separate database server, username, or password. The app uses this database URL:
 
-```sql
-CREATE DATABASE fastapi_todos;
+```env
+DATABASE_URL=sqlite:///./todos.db
 ```
 
-Create a local `.env` file from the example file:
+Create a local `.env` file from the example file if it does not exist yet:
 
 ```bash
 cp .env.example .env
 ```
 
-Then update `.env` with your MySQL username and password:
+When the API starts, it will automatically create:
 
-```env
-DATABASE_URL=mysql+pymysql://username:password@localhost:3306/fastapi_todos
+```text
+todos.db
 ```
 
-Example for a local MySQL root user:
+It will also create the `todos` table automatically.
 
-```env
-DATABASE_URL=mysql+pymysql://root:your_password@localhost:3306/fastapi_todos
-```
-
-The app will create the `todos` table automatically when it starts.
+SQLite works well for local development and PythonAnywhere free hosting.
 
 ## Run the API
 
