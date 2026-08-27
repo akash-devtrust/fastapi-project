@@ -1,16 +1,39 @@
+import os
 from datetime import date
 from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Response, status
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
+from app.analytics import router as analytics_router
 from app.database import Base, engine, get_db
 from app.db_models import TodoDB
 from app.models import Todo, TodoCreate, TodoPatch, TodoUpdate
 
 app = FastAPI(title="Simple Todo API")
 
+
+def parse_frontend_origins(value: str) -> list[str]:
+    origins = [origin.strip() for origin in value.split(",")]
+    return [origin for origin in origins if origin]
+
+
+frontend_origins = parse_frontend_origins(
+    os.getenv("FRONTEND_ORIGINS", "https://akash-devtrust.github.io")
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=frontend_origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
+
 Base.metadata.create_all(bind=engine)
+
+app.include_router(analytics_router)
 
 
 def find_todo(todo_id: int, db: Session) -> TodoDB:
